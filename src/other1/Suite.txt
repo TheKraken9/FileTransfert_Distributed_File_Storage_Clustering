@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void xy(int b,float y0,float h);
+void write(float*x,float*y);
+void read();
+int main(){
+	printf("Calcul du couple (xn,yn)\n");
+///Donnees	
+	float y0=2, b=2;
+	float h=0.05;
+
+///Traitement	
+	xy(b,y0,h);
+///Resultats
+	read();
+	return 0;
+}
+void read(){
+	printf("Courbe\n");
+	FILE *gnuplotPipe = popen("C:\\gnuplot\\bin\\gnuplot -persist","w");
+	if(gnuplotPipe){
+	fprintf(gnuplotPipe,

@@ -1,0 +1,29 @@
+close(fichier);
+}
+void xy(int b,float y0,float h)
+{
+		float xn=0;
+		y0=2;
+		float y1=0;
+		int n=0;
+		int i=0;
+		float j=0;
+		float x[21];
+		float y[21];
+	while(i<21){
+		xn=j/10;
+		float xn2=h*n;
+		float num=h*((pow(xn2,2)*exp(-xn2))-(((3*(pow(xn2,2)))+1)*y0));
+		float denom=1+h+((3*h)*pow(xn2,2));
+		y1=y0+(num/denom);
+		x[i]=xn;
+		y[i]=y1;
+		printf("%i %g %g\n",i,x[i],y[i]);
+		n+=1;
+		i+=1;
+		j+=1;
+		y0=y1;	
+	}
+	write(x,y);
+	
+}
