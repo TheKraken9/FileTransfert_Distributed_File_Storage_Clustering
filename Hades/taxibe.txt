@@ -1,0 +1,25 @@
+nameHelper varchar(20) not null,
+ageHelper smallint not null,
+contactHelper bigint not null
+);
+
+create table versementPerDay(
+idVersement serial not null primary key,
+idCar smallint references car(idCar),
+moneyValue float not null
+);
+
+create table reparation(
+idReparation serial not null primary key,
+idCar smallint references car(idCar),
+dateBegin date,
+dateEnd date
+);
+
+create table maintain(
+idMaintain serial not null primary key,
+idCar smallint references car(idCar),
+dateOfMaintain date,
+reason varchar(255)
+);
+

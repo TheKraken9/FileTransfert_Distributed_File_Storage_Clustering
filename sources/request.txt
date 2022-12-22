@@ -1,0 +1,105 @@
+create database taxibe;
+
+\c taxibe;
+
+create table driver(
+    idDriver serial not null primary key,
+    firstnameDriver varchar(50) not null,
+    lastnameDriver varchar(50) not null,
+    contactDriver varchar(20) not null
+);
+
+create table helper(
+    idHelper serial not null primary key,
+    firstnameHelper varchar(50) not null,
+    lastnameHelper varchar(50) not null,
+    contactHelper varchar(20) not null
+);
+
+create table car(
+    idCar serial not null primary key,
+    immatriculation varchar(20) not null ,
+    type varchar(20) not null ,
+    color varchar(20) not null ,
+    line varchar(20) not null
+);
+
+create table moneyEnter(
+    idMoneyEnter serial not null primary key ,
+    money money not null ,
+    idCar smallint references car(idCar) ,
+    idDriver smallint references driver(idDriver) ,
+    idHelper smallint references helper(idHelper) ,
+    dateOfEnter date not null
+);
+
+create table carDestroy(
+    idCarDestroy serial not null primary key ,
+    idCar smallint references car(idCar) ,
+    dateBegin date not null ,
+    dateEnd date not null
+);
+
+create table maintain(
+    idMaintain serial not null primary key ,
+    idCar smallint references car(idCar) not null ,
+    money money ,
+    dateOfMaintain date not null ,
+    description varchar(255) not null
+);
+
+--requests
+---vola miditra isan'andro/fiara, dia iza ny sofera sy receveur.
+create or replace view taxibe.moneyPerDay as
+    select d.firstnameDriver as Driver ,
+           h.firstnameHelper as Helper,
+           c.immatriculation as immatriculation,
+           money,
+           dateOfEnter
+    from moneyEnter
+        join car as c on c.idCar = moneyEnter.idCar
+        join driver as d on d.idDriver = moneyEnter.idDriver
+        join helper as h on h.idHelper = moneyEnter.idHelper;
+
+---iza ny fiara simba dia hatr@ oviana.
+create or replace view taxibe.destroyDelay as
+    select c.immatriculation as immatriculation,
+           c.type as type,
+           datebegin,
+           dateEnd,
+           carDestroy.dateEnd::date - carDestroy.dateBegin::date as delay
+    from carDestroy
+        join car as c on carDestroy.idCar = c.idCar;
+
+--otrinona ny vola lany @fanamboarana fiara iray isam-bolana?
+create or replace view taxibe.expensePerMonth as
+    select c.immatriculation as immatriculation,
+       sum(money) as total
+      from maintain
+           join car as c on maintain.idCar = c.idCar
+      group by maintain.idCar, c.immatriculation;
+
+--otrinona ny vola tombony isam-bolana?
+create or replace view taxibe.benefits as
+    select c.immatriculation as immatriculation,
+           sum(money) as Total
+    from moneyEnter
+        join car as c on moneyEnter.idCar = c.idCar
+    group by moneyEnter.idCar, c.immatriculation;
+
+--contact mpamily sy aide chauffeur.
+create or replace view taxibe.contacts as
+    select d.firstnameDriver as Driver,
+           d.contactDriver as ContactDriver,
+           h.firstnameHelper as Helper,
+           h.contactHelper as ContactHelper
+    from driver as d, helper as h;
+
+--iza no nitondran'ilay fiara numero 1912TAD t@ 2-12-22.
+select d.firstnameDriver,
+       d.lastnameDriver
+    from moneyEnter
+        join driver as d on moneyEnter.idDriver = d.idDriver
+        join car as c on moneyEnter.idCar = c.idCar
+    where c.immatriculation like '1265 TAC' and moneyEnter.dateOfEnter = '2022-11-29';
+

@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include<math.h>
+#define A 0.0 // Borne Inférieure
+#define B 5.0 // Borne Supérieure
+#define N 100 // Nombre d'itérations
+#define EPS 1.0e-15 // Précision demandée
+double f(double x)
+{
+return log(x); // fonction à tester Ln(x) = 0 dans [0, 5]
+}
+void main()
+{
+double *a, *b, *x;
+a = (double *)calloc(N,sizeof(double)

@@ -1,0 +1,66 @@
+gestion cooperative taxi-be.
+
+-vola miditra isan'andro/fiara, dia iza ny sofera sy receveur.
+-iza ny fiara simba dia hatr@ oviana.
+-otrinona ny vola lany @fanamboarana fiara iray isam-bolana?
+-otrinona ny vola tombony isam-bolana?
+-contact mpamily sy aide chauffeur.
+-iza no nitondran'ilay fiara numero 1912TAD t@ 2-12-22.
+
+
+create database taxibe;
+\c taxibe;
+
+create table switcher(
+idSwitcher serial not null primary key,
+idDriver smallint not null,
+idHelper smallint not null,
+dateOfUse date not null,
+moneyVersement float not null
+);
+
+create table car(
+idCar SERIAL primary key,
+immCar varchar(20) not null,
+lineCar varchar(20) not null,
+colorCar varchar(20) not null,
+nbPlaceCar smallint not null
+);
+
+create table driver(
+idDriver serial not null primary key,
+firstnameDriver varchar(20) not null,
+lastnameDriver varchar(20) not null,
+ageDriver smallint not null,
+categoriesDriver varchar(20) not null,
+contactDriver bigint not null
+);
+
+create table helper(
+idHelper serial not null primary key,
+firstnameHelper varchar(20) not null,
+lastnameHelper varchar(20) not null,
+ageHelper smallint not null,
+contactHelper bigint not null
+);
+
+create table versementPerDay(
+idVersement serial not null primary key,
+idCar smallint references car(idCar),
+moneyValue float not null
+);
+
+create table reparation(
+idReparation serial not null primary key,
+idCar smallint references car(idCar),
+dateBegin date,
+dateEnd date
+);
+
+create table maintain(
+idMaintain serial not null primary key,
+idCar smallint references car(idCar),
+dateOfMaintain date,
+reason varchar(255)
+);
+

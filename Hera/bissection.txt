@@ -1,0 +1,12 @@
+);
+b = (double *)calloc(N,sizeof(double));
+x = (double *)calloc(N,sizeof(double));
+a[0] = A; // Initialisation du pointeur *a
+b[0] = B; // Initialisation du pointeur *b
+x[0] = (a[0]+b[0])/2.0; // Initialisation du pointeur *x
+int k=0;
+while( k>=0 &&fabs(b[k] - a[k]) > EPS ) // Arrêt si un des deux critères est faux
+{
+if( f(x[k])*f(a[k]) < 0 )
+{
+a[k+1] = a[

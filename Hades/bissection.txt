@@ -1,0 +1,17 @@
+k];
+b[k+1] = x[k];
+}
+if( f(x[k])*f(b[k]) < 0 )
+{
+a[k+1] = x[k];
+b[k+1] = b[k];
+}
+x[k+1] = (a[k+1]+b[k+1])/2.0;
+printf("K = %d \t X = %18.16g\n", k, x[k]);
+// Impression du nombre d'itérations, et la solution à Ln(x) = 0
+k++;
+}
+delete [] a; // Libération de la mémoire
+delete [] b; // Libération de la mémoire
+delete [] x; // Libération de la mémoire
+}

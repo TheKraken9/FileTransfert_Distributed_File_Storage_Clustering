@@ -1,0 +1,99 @@
+GESTION PHARMACIE
+
+--Question
+Inona daholo ny fanafody ao anatiny ? Paracetamol, Vitamine C
+Iza no mila ordonance dia iza no tsy mila? arakarak'ilay fanafody
+Inona ny ambony ny fanafody mbola misy?
+Listen'ny fanafody lafo ao anatin'ny andro iray ?
+Inona ny sokajin'ilay fanafody?
+Iza avy ny pharmacie de garde?
+Ohatrinona ny vidin'ny fanafody tsirairay avy?
+Lisitry ny fanafody mivoaka sy miditra
+Lisitry ny mpiasa
+Iza no nividy ilay fanafody?
+
+
+entrée 
+sortie (vola azo isam_andro, vola tombony)
+traitement
+stockage
+
+__SORTIE
+--Otrinona ny vola azoko isan'andro?
+--Ohatrinona ny tombony azoko isam-bolana
+	--ohatrinona ny vola miditra sy mivoaka amiko isam-bolana
+--Inona ny stock ny fanafody
+	--ahafahana manao approvisionement	
+
+__DONNEES
+--Fanafody(idFanafody, nom, prix de vente, prix d'achat)
+--Inventairen'ny fanafody
+
+--Vola mivoaka
+		--Depense(idDepense, date, montant, description)
+		--AchatFanafody(idAchatFanafody, dateNividiananaAzy, Fournisseur)
+--Vola miditra
+		--DetailFacture(idFacture, date, nom Client)
+
+__RELATION
+	--fanafody(0,n) <-> (1,n)facture
+		--fanafody (0,n) -> ? facture
+		--fanafody ? <- (1,n) facture
+	
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Gestion de pharmacie
+
+-- Question
+    -- Inona daholo ny fanafody ao anatiny? paracetamol, vitamine C
+    -- Iza no mila ordonnance dia iza no tsy mila? arakarak ilay fanafody
+    -- Inona ny ambony ny fanafody mbola misy?
+    -- Liste ny fanafody lafo ao anaty ny andro iray?
+    -- Inona ny sokajin'ilay fanafody?
+    -- Iza avy ny pharmacie de garde?
+    -- Ohatrinona ny vidin'ny fanafody tsirairay avy?
+    -- Lisitry ny fanafody mivoaka sy miditra
+    -- Lisitry ny mpiasa
+    -- Iza no nividy ilay fanafody?
+    -- Inona no andrasana amin'ilay logiciel?
+
+-- Sortie
+    -- Ohatrinona ny vola azoko isa'andro? (Ventes)
+    -- Ohatrinona ny tombony azoko isam-bolana? 
+        -- Ohatrinona ny vola miditra isam'bolana sy ny mivoaka  
+    -- Inona ny stock ny fanafody?
+        -- Ahafahana manao approvisionnement
+
+
+-- Entree
+    -- Mila inventaire ana fanafody
+    -- Fanafody(idFanafody, anarana, prixDeVente, prixDAchat?)
+    -- VolaMiditra
+        -- Facture(idFacture, date, nomClient)
+    -- VolaMivoaka
+        -- Depense(idDepense, oviana, montant, description)
+        -- AchatFanafody(idAchatFanafody ,dateAchat, fournisseur)
+
+
+-- Relation
+    -- Fanafody(0, n) <-> (1, n)Facture
+        -- Fanafody (0, n)-> ? Facture
+        -- Fanafody ? <- (1, n)Facture
+        -- Fanafody(idFanafody, anarana, prixDeVente, prixDAchat?)
+        -- Vente(idvente, date, nomClient)
+        -- venteFanafody(idVente, idFanafody, quantite)
+    -- Etudiant(1,1) <-> (0,n)Promotion
+        -- Etudiant(idEtudiant, nom, prenom, idPromotion)
+        -- Promotion(idPromotion,numProm, DateProm)
+
+
+
+
+
+
+
+
+
+

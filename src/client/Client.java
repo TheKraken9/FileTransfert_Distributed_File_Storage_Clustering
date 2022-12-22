@@ -1,134 +1,117 @@
 package client;
-import server.Server;
 
-import java.net.*;
-import java.io.*;
+import javax.sound.midi.Soundbank;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
 
     Socket socket;
-    DataOutputStream output;
-    DataInputStream input;
+    DataOutputStream outputStream;
+    DataInputStream inputStream;
 
-    public DataOutputStream getOutput() {
-        return output;
+    public void setInputStream(DataInputStream inputStream) {
+        this.inputStream = inputStream;
     }
 
-    public void setOutput(DataOutputStream output) {
-        this.output = output;
-    }
-
-    public DataInputStream getInput() {
-        return input;
-    }
-
-    public void setInput(DataInputStream input) {
-        this.input = input;
-    }
-
-    public Socket getSocket() {
-        return socket;
+    public void setOutputStream(DataOutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
+    public DataInputStream getInputStream() {
+        return inputStream;
+    }
+
+    public DataOutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
     public Client(String host, int port) throws Exception {
         setSocket(new Socket(host, port));
-        setInput(new DataInputStream(getSocket().getInputStream()));
-        setOutput(new DataOutputStream(getSocket().getOutputStream()));
+        setInputStream(new DataInputStream(getSocket().getInputStream()));
+        setOutputStream(new DataOutputStream(getSocket().getOutputStream()));
     }
 
     public Client(Socket socket) throws Exception {
         setSocket(socket);
-        setInput(new DataInputStream(getSocket().getInputStream()));
-        setOutput(new DataOutputStream(getSocket().getOutputStream()));
+        setInputStream(new DataInputStream(getSocket().getInputStream()));
+        setOutputStream(new DataOutputStream(getSocket().getOutputStream()));
     }
 
-    public void sendFile(File file) throws Exception {
-        sendNameFile(file);
-        sendContent(file);
+    public void sendFileName(File file) throws Exception {
+        int length = file.getName().getBytes().length;
+        getOutputStream().writeInt(length);
+        getOutputStream().write(file.getName().getBytes());
     }
 
-    public void sendContent(File file) throws Exception {
-        int bytes = 0;
-        // Open the File where he located in your pc
+    public void sendContentFile(File file) throws Exception {
+        int lenght = 0;
+        int offset = 0;
         FileInputStream fileInputStream = new FileInputStream(file);
-        // Here we break file into chunks
-        byte[] buffer = new byte[4 * 1024];
-        while ((bytes = fileInputStream.read(buffer)) != -1) {
-            // Send the file to Server Socket
-            output.write(buffer, 0, bytes);
-            output.flush();
+        byte[] bytes = new byte[4 * 1024];
+        while ((lenght = fileInputStream.read(bytes)) != -1) {
+            outputStream.write(bytes, offset, lenght);
+            outputStream.flush();
         }
-        // close the file here
         fileInputStream.close();
     }
-
-    public void sendNameFile(File file) throws Exception {
-        int lengthName = file.getName().getBytes().length;
-        getOutput().writeInt(lengthName);
-        getOutput().write(file.getName().getBytes());
+    public void sendFile(File file) throws Exception {
+        sendFileName(file);
+        sendContentFile(file);
     }
 
     public static void main(String[] args) {
-        try {
+        try{
             while (true) {
-                Scanner sc = new Scanner(System.in);
-                String path = "/home/andrianambinina/IdeaProjects/Transfert/src/";
+                Scanner scanner = new Scanner(System.in);
+                String path = "/home/andrianambinina/IdeaProjects/FileTransfert/sources/";
                 System.out.println("What do you want to do ?");
-                System.out.println("1. Insert a file");
-                System.out.println("2. Look up a file");
-                System.out.println("3. exit program");
-                System.out.println("Enter your option");
+                System.out.println("1. Insert a new file");
+                System.out.println("2. Download a new File");
+                System.out.println("Exit the program");
+                System.out.println("Enter your option : ");
 
-                int option = Integer.parseInt(sc.nextLine());
+                int choice = Integer.parseInt(scanner.nextLine());
 
-                if(option <2) {
-                    System.out.println("Enter the file name : ");
-                    String file_name = sc.nextLine();
-                    File file = new File(path + file_name);
+                if(choice < 2) {
+                    System.out.println("Enter the file name : (Your file must be located in this path /home/andrianambinina/IdeaProjects/FileTransfert/sources)");
+                    String fileName = scanner.nextLine();
+                    File file = new File(path + fileName);
                     if(file.exists()) {
-                        Client client = new Client("localhost", 8008);
-                        client.sendFile(new File(""+path+file_name));
+                        Client client = new Client("127.0.0.1", 4000);
+                        client.outputStream.writeInt(choice);
+                        client.sendFile(new File(path+fileName));
                         client.getSocket().close();
-                        System.out.println("File Insertion Successful");
+                        System.out.println("File sent Successfully");
+                    } else {
+                        System.out.println("File does not exist");
                     }
-                } else if (option < 3) {
-                    System.out.println("Enter the file name : ");
-                    String file_name = sc.nextLine();
-                    int dot_end = file_name.lastIndexOf('.');
-                    String base_file_name = file_name.substring(0, dot_end);
-                    Server server = new Server(8008);
-                    System.out.println("Forwarding the request...");
-                    server.receiveContent(new File(""+path+file_name));
-                    server.getServer().close();
-                    System.out.println("Download successful :)");
-                    path = "/home/andrianambinina/IdeaProjects/Transfert/Downloads/";
-
-                } else if(option < 4) {
-                    System.out.println("Program finished");
+                } else if (choice < 3) {
+                    System.out.println("Enter the file name : (Your file will be located in this path /home/andrianambinina/IdeaProjects/FileTransfert/downloads)");
+                    String fileName = scanner.nextLine();
+                    Client client = new Client("127.0.0.1", 4000);
+                    client.outputStream.writeInt(choice);
+                    client.sendFileName(new File(fileName));
+                } else if (choice < 4) {
+                    System.out.println("Program exited");
                     return;
                 }
-
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    public static void makeConnectionToServer(String server_name) throws IOException {
-        try {
-            InetAddress iAddress = InetAddress.getByName(server_name + "");
-            String server_IP = iAddress.getHostAddress();
-
-        } catch (UnknownHostException error) {
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
             error.printStackTrace();
         }
-
     }
-
 }

@@ -1,0 +1,24 @@
+t not null
+);
+
+create table car(
+idCar SERIAL primary key,
+immCar varchar(20) not null,
+lineCar varchar(20) not null,
+colorCar varchar(20) not null,
+nbPlaceCar smallint not null
+);
+
+create table driver(
+idDriver serial not null primary key,
+firstnameDriver varchar(20) not null,
+lastnameDriver varchar(20) not null,
+ageDriver smallint not null,
+categoriesDriver varchar(20) not null,
+contactDriver bigint not null
+);
+
+create table helper(
+idHelper serial not null primary key,
+firstnameHelper varchar(20) not null,
+last
